@@ -7,7 +7,7 @@ import Bubbles from "./Bubbles";
 import ColorList from "./ColorList";
 import { getColors } from "../actions/actions";
 
-const BubblePage = ({ colorsList, getColors, isFetching }) => {
+const BubblePage = ({ colorsList, getColors, reFetch }) => {
   // const [colorList, setColorList] = useState([]);
   // fetch your colors data from the server when the component mounts
   // set that data to the colorList state property
@@ -18,17 +18,19 @@ const BubblePage = ({ colorsList, getColors, isFetching }) => {
 
   console.log("Bubblepage > colorsList:", colorsList);
   // setColorList(colorsList);
-  return (
-    <>
-      <ColorList colors={colorsList} />
-      <Bubbles colors={colorsList} />
-    </>
+  return !colorsList ? (
+    <div>LOADING THE RAINBOW...</div>
+  ) : (
+    <div className="bubblesContent">
+      <ColorList />
+      <Bubbles />
+    </div>
   );
 };
 
 const mapStateToProps = state => ({
   colorsList: state.colorsList,
-  isFetching: state.isFetching
+  reFetch: state.reFecth
 });
 
 export default connect(mapStateToProps, { getColors })(BubblePage);

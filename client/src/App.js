@@ -13,11 +13,9 @@ function App() {
       <br></br>
       <Link to="/bubblepage">Bubbles!!</Link>
       <br />
-      {/* <Link to="/secondpage">secondpage...</Link> */}
       <Switch>
         <Route path="/login" component={Login} />
         <PrivateRoute exact path="/bubblepage" component={BubblePage} />
-        {/* <PrivateRoute exact path="/newfriends" component={AddFriend} /> */}
       </Switch>
     </div>
   );

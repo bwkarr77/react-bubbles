@@ -1,39 +1,39 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 
-const initialColor = {
-  color: "",
-  code: { hex: "" }
-};
+import {
+  setData,
+  deleteColor,
+  startEdit,
+  saveEdit,
+  handleChange,
+  addColor,
+  logout,
+  cancelEdit
+} from "../actions/actions";
 
-const ColorList = ({ colors, updateColors }) => {
-  console.log(colors);
-  const [editing, setEditing] = useState(false);
-  const [colorToEdit, setColorToEdit] = useState(initialColor);
-
-  const editColor = color => {
-    setEditing(true);
-    setColorToEdit(color);
-  };
-
-  const saveEdit = e => {
-    e.preventDefault();
-    // Make a put request to save your updated color
-    // think about where will you get the id from...
-    // where is is saved right now?
-  };
-
-  const deleteColor = color => {
-    // make a delete request to delete this color
-  };
+const ColorList = ({
+  colors,
+  startEdit,
+  saveEdit,
+  deleteColor,
+  editing,
+  colorToEdit,
+  handleChange,
+  addColor,
+  newColor,
+  logout,
+  cancelEdit
+}) => {
+  console.log("ColorList > colors:", colors);
 
   return (
     <div className="colors-wrap">
       <p>colors</p>
       <ul>
         {colors.map(color => (
-          <li key={color.color} onClick={() => editColor(color)}>
+          <li key={color.color} onClick={() => startEdit(color.id)}>
             <span>
               <span
                 className="delete"
@@ -53,42 +53,94 @@ const ColorList = ({ colors, updateColors }) => {
           </li>
         ))}
       </ul>
-      {editing && (
-        <form onSubmit={saveEdit}>
+      {editing ? (
+        <form
+          onSubmit={e => {
+            e.preventDefault();
+            saveEdit(colorToEdit);
+          }}
+        >
           <legend>edit color</legend>
           <label>
             color name:
             <input
-              onChange={e =>
-                setColorToEdit({ ...colorToEdit, color: e.target.value })
-              }
+              onChange={e => handleChange(e, "colortoEdit")}
               value={colorToEdit.color}
             />
           </label>
           <label>
             hex code:
             <input
-              onChange={e =>
-                setColorToEdit({
-                  ...colorToEdit,
-                  code: { hex: e.target.value }
-                })
-              }
+              name="code"
+              onChange={e => handleChange(e, "colorToEdit")}
               value={colorToEdit.code.hex}
             />
           </label>
           <div className="button-row">
             <button type="submit">save</button>
-            <button onClick={() => setEditing(false)}>cancel</button>
+            <button onClick={cancelEdit}>cancel</button>
+          </div>
+        </form>
+      ) : (
+        <form
+          onSubmit={e => {
+            addColor(e, newColor);
+          }}
+        >
+          <legend>new color</legend>
+          <label>
+            color name:
+            <input
+              name="color"
+              onChange={e => handleChange(e, "newColor")}
+              value={newColor.color}
+            />
+          </label>
+          <label>
+            hex code:
+            <input
+              name="code"
+              onChange={e => handleChange(e, "newColor")}
+              value={newColor.code.hex}
+            />
+          </label>
+          <div className="button-row">
+            <button type="submit">Add Color</button>
           </div>
         </form>
       )}
+      <Link to="/" onClick={logout}>
+        <div
+          style={{
+            background: "blue",
+            color: "white",
+            padding: "10px 5px",
+            margin: "30px 0px"
+          }}
+        >
+          Logout
+        </div>
+      </Link>
       <div className="spacer" />
       {/* stretch - build another form here to add a color */}
     </div>
   );
 };
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+  colors: state.colorsList,
+  editing: state.isEditing,
+  colorToEdit: state.colorToEdit,
+  newColor: state.newColor
+});
 
-export default connect(mapStateToProps, {})(ColorList);
+export default connect(mapStateToProps, {
+  setData,
+  deleteColor,
+  startEdit,
+  saveEdit,
+  handleChange,
+  addColor,
+  logout,
+  cancelEdit
+})(ColorList);

@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { login, handleChange } from "../actions/actions";
 
+const pushDir1 = "/bubbles";
+
 const Login = ({ history, credentials, handleChange, login, error, token }) => {
   // make a post request to retrieve a token from the api
   // when you have handled the token, navigate to the BubblePage route++
@@ -9,14 +11,12 @@ const Login = ({ history, credentials, handleChange, login, error, token }) => {
   useEffect(() => {
     if (!!token) {
       localStorage.setItem("token", token);
-      history.push("/FriendList");
+      history.push(pushDir1);
     }
   }, [token]);
 
   return (
     <div>
-      <h1>Welcome to the Bubble App!</h1>
-      <p>Build a login page here</p>
       <h2>Login:</h2>
       <form onSubmit={e => login(e, credentials)}>
         <input

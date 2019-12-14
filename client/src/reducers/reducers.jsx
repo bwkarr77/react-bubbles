@@ -6,25 +6,40 @@ import {
   LoginSuccess,
   LoginFail,
   HandleChange,
+  Logout,
+  EditDataStart,
+  EditDataSuccess,
+  EditDataFail,
+  DeleteUnit,
   AddDataStart,
   AddDataSuccess,
   AddDataFail,
-  Logout
+  SetData,
+  CancelEdit
 } from "../actions/actions.jsx";
 
 const initialState = {
   error: "",
+  //login state
   isFetching: false,
   isLoggingIn: false,
-  isAdding: false,
-  colorsList: [],
   credentials: {},
+  token: "",
+  colorsList: [],
+  //new color
+  isAdding: false,
   newColor: {
     name: "",
-    age: "",
-    email: ""
+    code: { hex: "" }
   },
-  token: ""
+  //color editing
+  isEditing: false,
+  initialColor: {
+    color: "",
+    code: { hex: "" }
+  },
+  colorToEdit: {},
+  reFetch: false
 };
 
 export const rootReducer = (state = initialState, { type, payload }) => {
@@ -42,7 +57,6 @@ export const rootReducer = (state = initialState, { type, payload }) => {
         isFetching: false,
         colorsList: payload
       };
-      console.log("reducers> GetdataSuccess:");
     case GetDataFail:
       return {
         ...state,
@@ -71,10 +85,37 @@ export const rootReducer = (state = initialState, { type, payload }) => {
     case HandleChange:
       return {
         ...state,
-        [payload.form]: {
-          ...state[payload.form],
-          [payload.event.target.name]: payload.event.target.value
-        }
+        [payload.form]:
+          payload.target.name === "code"
+            ? {
+                ...state[payload.form],
+                code: { hex: payload.target.value }
+              }
+            : {
+                ...state[payload.form],
+                [payload.target.name]: payload.target.value
+              }
+      };
+    case Logout:
+      return {
+        ...state,
+        error: "",
+        isFetching: false,
+        isLoggingIn: false,
+        isAdding: false,
+        isEditing: false,
+        colorsList: [],
+        credentials: {},
+        newColor: {
+          color: "",
+          code: { hex: "" }
+        },
+        token: "",
+        initialColor: {
+          color: "",
+          code: { hex: "" }
+        },
+        colorToEdit: {}
       };
     case AddDataStart:
       return {
@@ -86,30 +127,59 @@ export const rootReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         err: "",
-        colorsList: payload,
-        isAdding: false
+        isAdding: false,
+        reFetch: !state.reFetch,
+        newColor: {
+          color: "",
+          code: { hex: "" }
+        }
       };
     case AddDataFail:
       return {
         ...state,
         isAdding: false,
-        err: ""
+        err: payload
       };
-    case Logout:
+    case EditDataStart:
       return {
         ...state,
-        error: "",
-        isFetching: false,
-        isLoggingIn: false,
-        isAdding: false,
-        colorsList: [],
-        credentials: {},
-        newColor: {
-          name: "",
-          age: "",
-          email: ""
-        },
-        token: ""
+        isEditing: true,
+        err: "",
+        colorToEdit: state.colorsList.find(
+          color => `${color.id}` === `${payload}`
+        )
+      };
+    case EditDataSuccess:
+      return {
+        ...state,
+        err: "",
+        isEditing: false,
+        colorToEdit: {},
+        reFetch: !state.reFetch
+      };
+    case EditDataFail:
+      return {
+        ...state,
+        isEditing: false,
+        err: "",
+        colorToEdit: {}
+      };
+    case CancelEdit:
+      return {
+        ...state,
+        isEditing: false,
+        colorToEdit: {},
+        error: ""
+      };
+    case DeleteUnit:
+      return {
+        ...state,
+        reFetch: !state.reFetch
+      };
+    case SetData:
+      return {
+        ...state,
+        colorsList: payload
       };
     default:
       return state;
