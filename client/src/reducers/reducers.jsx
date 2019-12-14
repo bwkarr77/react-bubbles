@@ -1,14 +1,14 @@
 import {
-  GetFriendsStart,
-  GetFriendsSuccess,
-  GetFriendsFail,
+  GetDataStart,
+  GetDataSuccess,
+  GetDataFail,
   LoginStart,
   LoginSuccess,
   LoginFail,
   HandleChange,
-  AddFriendStart,
-  AddFriendSuccess,
-  AddFriendFail,
+  AddDataStart,
+  AddDataSuccess,
+  AddDataFail,
   Logout
 } from "../actions/actions.jsx";
 
@@ -17,9 +17,9 @@ const initialState = {
   isFetching: false,
   isLoggingIn: false,
   isAdding: false,
-  friendsList: [],
+  colorsList: [],
   credentials: {},
-  newFriend: {
+  newColor: {
     name: "",
     age: "",
     email: ""
@@ -29,20 +29,21 @@ const initialState = {
 
 export const rootReducer = (state = initialState, { type, payload }) => {
   switch (type) {
-    case GetFriendsStart:
+    case GetDataStart:
       return {
         ...state,
         error: "",
         isFetching: true
       };
-    case GetFriendsSuccess:
+    case GetDataSuccess:
       return {
         ...state,
         error: "",
         isFetching: false,
-        friendsList: payload
+        colorsList: payload
       };
-    case GetFriendsFail:
+      console.log("reducers> GetdataSuccess:");
+    case GetDataFail:
       return {
         ...state,
         error: payload,
@@ -75,20 +76,20 @@ export const rootReducer = (state = initialState, { type, payload }) => {
           [payload.event.target.name]: payload.event.target.value
         }
       };
-    case AddFriendStart:
+    case AddDataStart:
       return {
         ...state,
         isAdding: true,
         err: ""
       };
-    case AddFriendSuccess:
+    case AddDataSuccess:
       return {
         ...state,
         err: "",
-        friendsList: payload,
+        colorsList: payload,
         isAdding: false
       };
-    case AddFriendFail:
+    case AddDataFail:
       return {
         ...state,
         isAdding: false,
@@ -101,9 +102,9 @@ export const rootReducer = (state = initialState, { type, payload }) => {
         isFetching: false,
         isLoggingIn: false,
         isAdding: false,
-        friendsList: [],
+        colorsList: [],
         credentials: {},
-        newFriend: {
+        newColor: {
           name: "",
           age: "",
           email: ""

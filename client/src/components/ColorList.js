@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { connect } from "react-redux";
 
 const initialColor = {
   color: "",
@@ -34,12 +35,14 @@ const ColorList = ({ colors, updateColors }) => {
         {colors.map(color => (
           <li key={color.color} onClick={() => editColor(color)}>
             <span>
-              <span className="delete" onClick={e => {
-                    e.stopPropagation();
-                    deleteColor(color)
-                  }
-                }>
-                  x
+              <span
+                className="delete"
+                onClick={e => {
+                  e.stopPropagation();
+                  deleteColor(color);
+                }}
+              >
+                x
               </span>{" "}
               {color.color}
             </span>
@@ -86,4 +89,6 @@ const ColorList = ({ colors, updateColors }) => {
   );
 };
 
-export default ColorList;
+const mapStateToProps = state => ({});
+
+export default connect(mapStateToProps, {})(ColorList);

@@ -1,14 +1,14 @@
 import { axiosWithAuth } from "../utils/axiosWithAuth";
 
-export const GetFriendsStart = "GetFriendsStart";
-export const GetFriendsSuccess = "GetFriendsSuccess";
-export const GetFriendsFail = "GetFriendsFail";
+export const GetDataStart = "GetDataStart";
+export const GetDataSuccess = "GetDataSuccess";
+export const GetDataFail = "GetDataFail";
 export const LoginStart = "LoginStart";
 export const LoginSuccess = "LoginSuccess";
 export const LoginFail = "LoginFail";
-export const AddFriendStart = "AddFriendStart";
-export const AddFriendSuccess = "AddFriendSuccess";
-export const AddFriendFail = "AddFriendFail";
+export const AddDataStart = "AddDataStart";
+export const AddDataSuccess = "AddDataSuccess";
+export const AddDataFail = "AddDataFail";
 export const Logout = "Logout";
 
 export const HandleChange = "HandleChange";
@@ -17,7 +17,7 @@ export const c2 = "c2";
 
 export const apiBase = "http://localhost:5000/api";
 export const apiLogin = `${apiBase}/login`;
-export const apiFriends = `${apiBase}/friends`;
+export const apiColor = `${apiBase}/colors`;
 
 const testInfo = {
   testName: "Lambda School",
@@ -25,13 +25,18 @@ const testInfo = {
   testKey: "ahuBHejkJJiMDhmODZhZi0zaeLTQ4ZfeaseOGZgesai1jZWYgrTA07i73Gebhu98"
 };
 
-export const getFriends = () => dispatch => {
-  dispatch({ type: GetFriendsStart });
+export const getColors = () => dispatch => {
+  dispatch({ type: GetDataStart });
+  console.log("actions > getColors:", apiColor);
   axiosWithAuth()
-    .get(apiFriends)
-    .then(res => dispatch({ type: GetFriendsSuccess, payload: res.data }))
+    .get(apiColor)
+    .then(res => {
+      console.log(res.data);
+      dispatch({ type: GetDataSuccess, payload: res.data });
+    })
     .catch(err => {
-      return dispatch({ type: GetFriendsFail, payload: err });
+      console.log("actions > getColors: fail");
+      return dispatch({ type: GetDataFail, payload: err });
     });
 };
 
@@ -52,16 +57,14 @@ export const handleChange = (event, formType) => ({
   payload: { event: event, form: formType }
 });
 
-export const addFriend = (event, newFriend) => dispatch => {
+export const addColor = (event, newColor) => dispatch => {
   event.preventDefault();
-  dispatch({ type: AddFriendStart });
+  dispatch({ type: AddDataStart });
   axiosWithAuth()
-    .post(apiFriends, newFriend)
-    .then(res =>
-      dispatch({ type: AddFriendSuccess, payload: res.data.payload })
-    )
+    .post(apiColor, newColor)
+    .then(res => dispatch({ type: AddDataSuccess, payload: res.data.payload }))
     .catch(err => {
-      return dispatch({ type: AddFriendFail, payload: err });
+      return dispatch({ type: AddDataFail, payload: err });
     });
 };
 
