@@ -172,6 +172,7 @@ export const rootReducer = (state = initialState, { type, payload }) => {
         error: ""
       };
     case DeleteUnit:
+      console.log(state.reFetch);
       return {
         ...state,
         reFetch: !state.reFetch

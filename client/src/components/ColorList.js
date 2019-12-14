@@ -12,17 +12,20 @@ import {
   logout,
   cancelEdit
 } from "../actions/actions";
+//
 
 const ColorList = ({
+  //mapStateToProps
   colors,
+  editing,
+  newColor,
+  colorToEdit,
+  //import from '../actions/actions'
+  deleteColor,
   startEdit,
   saveEdit,
-  deleteColor,
-  editing,
-  colorToEdit,
   handleChange,
   addColor,
-  newColor,
   logout,
   cancelEdit
 }) => {
@@ -33,7 +36,7 @@ const ColorList = ({
       <p>colors</p>
       <ul>
         {colors.map(color => (
-          <li key={color.color} onClick={() => startEdit(color.id)}>
+          <li key={color.id} onClick={() => startEdit(color.id)}>
             <span>
               <span
                 className="delete"
